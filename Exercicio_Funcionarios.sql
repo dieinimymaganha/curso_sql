@@ -25,3 +25,17 @@ SELECT DEPARTAMENTO, COUNT(*) FROM FUNCIONARIOS GROUP BY DEPARTAMENTO;
 -- IDENTIFICADO QUE FILMES POSSUI 21 REGISTROS E ROUPAS 53.
 
 SELECT NOME FROM FUNCIONARIOS WHERE DEPARTAMENTO = 'ROUPAS' OR DEPARTAMENTO = 'FILMES';
+
+-- O gestor de marketing pediu a lista das funcionarias que trabalhem no departamento
+-- de filmes ou no departamento lar. El necessita enviar um email para as colaborados
+-- desses dois setores.
+
+SELECT SEXO, COUNT(*) FROM FUNCIONARIOS 
+GROUP BY SEXO;
+
+-- 491 F, 484 M
+
+SELECT DEPARTAMENTO, COUNT(*) FROM FUNCIONARIOS
+GROUP BY DEPARTAMENTO;
+
+-- FILMES 21 LAR 52
