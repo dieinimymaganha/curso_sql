@@ -1732,3 +1732,22 @@ REGISTROS */
 /* EM RELACIONAMENTO 1  X 1 A CHAVE ESTRANGEIRA FICA NA TABELA MAIS FRACA */
 
 /* EM RELACINAMENTO 1 X N A CHAVE ESTRANGEIRA FICA SEMPRE NA CARDINALIDADE 'N' */
+
+INSERT INTO CLIENTE VALUES (NULL, 'JOAO', 'M', 'JOAO@IG.COM','79565656565655');
+INSERT INTO CLIENTE VALUES (NULL, 'CARLOS', 'M', 'CARLOSO@IG.COM','44874548787');
+INSERT INTO CLIENTE VALUES (NULL, 'ANA', 'F', 'ANA@IG.COM','8897664512');
+INSERT INTO CLIENTE VALUES (NULL, 'CARLA', 'F', NULL,'0216546879');
+INSERT INTO CLIENTE VALUES (NULL, 'JORGE', 'M', 'JORGE@IG.COM','026568765121');
+INSERT INTO CLIENTE VALUES (NULL, 'CELIA', 'F', 'CELIA@IG.COM','687513201545487');
+
++-----------+--------+------+----------------+-----------------+
+| IDCLIENTE | NOME   | SEXO | EMAIL          | CPF             |
++-----------+--------+------+----------------+-----------------+
+|         1 | JOAO   | M    | JOAO@IG.COM    | 79565656565655  |
+|         2 | CARLOS | M    | CARLOSO@IG.COM | 44874548787     |
+|         3 | ANA    | F    | ANA@IG.COM     | 8897664512      |
+|         4 | CARLA  | F    | NULL           | 0216546879      |
+|         5 | JORGE  | M    | JORGE@IG.COM   | 026568765121    |
+|         6 | CELIA  | F    | CELIA@IG.COM   | 687513201545487 |
++-----------+--------+------+----------------+-----------------+
+
