@@ -1770,3 +1770,29 @@ INSERT INTO ENDERECO VALUES (NULL, 'RUA URUGUAIANA', 'CENTRO', 'VITORIA.', 'ES',
 |          5 | RUA OUVIDOR            | FLAMENGO | RIO DE JANEIRO | RJ     |          6 |
 |          6 | RUA URUGUAIANA         | CENTRO   | VITORIA.       | ES     |          5 |
 +------------+------------------------+----------+----------------+--------+------------+
+
+INSERT INTO TELEFONE VALUES(NULL, 'CEL', '78458743',5);
+INSERT INTO TELEFONE VALUES(NULL, 'RES', '57576876',5);
+INSERT INTO TELEFONE VALUES(NULL, 'CEL', '54871445',1);
+INSERT INTO TELEFONE VALUES(NULL, 'COM', '54987921',2);
+INSERT INTO TELEFONE VALUES(NULL, 'RES', '89754654',1);
+INSERT INTO TELEFONE VALUES(NULL, 'CEL', '21354987',3);
+INSERT INTO TELEFONE VALUES(NULL, 'CEL', '89764654',3);
+INSERT INTO TELEFONE VALUES(NULL, 'COM', '66887845',1);
+INSERT INTO TELEFONE VALUES(NULL, 'RES', '15478454',5);
+INSERT INTO TELEFONE VALUES(NULL, 'CEL', '79977455',2);
+
++-------------+------+----------+------------+
+| IDETELEFONE | TIPO | NUMERO   | ID_CLIENTE |
++-------------+------+----------+------------+
+|           1 | CEL  | 78458743 |          5 |
+|           2 | RES  | 57576876 |          5 |
+|           3 | CEL  | 54871445 |          1 |
+|           4 | COM  | 54987921 |          2 |
+|           5 | RES  | 89754654 |          1 |
+|           6 | CEL  | 21354987 |          3 |
+|           7 | CEL  | 89764654 |          3 |
+|           8 | COM  | 66887845 |          1 |
+|           9 | RES  | 15478454 |          5 |
+|          10 | CEL  | 79977455 |          2 |
++-------------+------+----------+------------+
