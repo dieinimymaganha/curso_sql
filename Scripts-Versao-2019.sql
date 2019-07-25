@@ -1751,3 +1751,22 @@ INSERT INTO CLIENTE VALUES (NULL, 'CELIA', 'F', 'CELIA@IG.COM','687513201545487'
 |         6 | CELIA  | F    | CELIA@IG.COM   | 687513201545487 |
 +-----------+--------+------+----------------+-----------------+
 
+DESC ENDERECO;
+
+INSERT INTO ENDERECO VALUES (NULL, 'RUA ANTONIO SA', 'CENTRO', 'B. HORIZONTE', 'MG',4);
+INSERT INTO ENDERECO VALUES (NULL, 'RUA CAPITAO HERMES', 'CENTRO', 'RIO DE JANEIRO', 'RJ',1);
+INSERT INTO ENDERECO VALUES (NULL, 'RUA PRESENDENTE VARGAS', 'JARDINS', 'SAO PAULO', 'SP',3);
+INSERT INTO ENDERECO VALUES (NULL, 'RUA ALFANDEGA', 'ESTACIO', 'RIO DE JANEIRO', 'RJ',2);
+INSERT INTO ENDERECO VALUES (NULL, 'RUA OUVIDOR', 'FLAMENGO', 'RIO DE JANEIRO', 'RJ',6);
+INSERT INTO ENDERECO VALUES (NULL, 'RUA URUGUAIANA', 'CENTRO', 'VITORIA.', 'ES',5);
+
++------------+------------------------+----------+----------------+--------+------------+
+| IDENDERECO | RUA                    | BAIRRO   | CIDADE         | ESTADO | ID_CLIENTE |
++------------+------------------------+----------+----------------+--------+------------+
+|          1 | RUA ANTONIO SA         | CENTRO   | B. HORIZONTE   | MG     |          4 |
+|          2 | RUA CAPITAO HERMES     | CENTRO   | RIO DE JANEIRO | RJ     |          1 |
+|          3 | RUA PRESENDENTE VARGAS | JARDINS  | SAO PAULO      | SP     |          3 |
+|          4 | RUA ALFANDEGA          | ESTACIO  | RIO DE JANEIRO | RJ     |          2 |
+|          5 | RUA OUVIDOR            | FLAMENGO | RIO DE JANEIRO | RJ     |          6 |
+|          6 | RUA URUGUAIANA         | CENTRO   | VITORIA.       | ES     |          5 |
++------------+------------------------+----------+----------------+--------+------------+
