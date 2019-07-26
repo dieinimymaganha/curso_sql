@@ -1796,3 +1796,194 @@ INSERT INTO TELEFONE VALUES(NULL, 'CEL', '79977455',2);
 |           9 | RES  | 15478454 |          5 |
 |          10 | CEL  | 79977455 |          2 |
 +-------------+------+----------+------------+
+
+/* SELEÇÃO, PROJEÇÃO E JUNÇÃO */
+
+/* PROJEÇÃO --> É TUDO QUE VOCE QUER VER NA TELA*/
+
+SELECT NOW() AS DATA_ATUAL;
+
+SELECT 2 + 2 AS SOMA;
+
+SELECT 2 + 2 AS SOMA, NOME, NOW()
+FROM CLIENTE;
+
+/* SELEÇÃO --> SUBCONJUNTO DO CONJUNTO TOTAL DE REGISTROS DE UMA TABELA
+A CLAUSULA DE SELEÇÃO (FILTRO) É O WHERE */ 
+
+SELECT NOME, SEXO, EMAIL /* PROJEÇÃO */
+FROM CLIENTE /* ORIGEM */
+WHERE SEXO = 'F'; /* SELEÇÃO */
+
+SELECT NUMERO /* PROJEÇÃO */
+FROM TELEFONE /* ORIGEM */
+WHERE TIPO = 'CEL'; /* SELEÇÃO */
+
+/* JUNÇÃO --> JOIN*/
+
+SELECT NOME, EMAIL, IDCLIENTE
+FROM CLIENTE;
+
++--------+----------------+-----------+
+| NOME   | EMAIL          | IDCLIENTE |
++--------+----------------+-----------+
+| JOAO   | JOAO@IG.COM    |         1 |
+| CARLOS | CARLOSO@IG.COM |         2 |
+| ANA    | ANA@IG.COM     |         3 |
+| CARLA  | NULL           |         4 |
+| JORGE  | JORGE@IG.COM   |         5 |
+| CELIA  | CELIA@IG.COM   |         6 |
++--------+----------------+-----------+
+
+SELECT ID_CLIENTE, BAIRRO, CIDADE
+FROM ENDERECO;
+
++------------+----------+----------------+
+| ID_CLIENTE | BAIRRO   | CIDADE         |
++------------+----------+----------------+
+|          4 | CENTRO   | B. HORIZONTE   |
+|          1 | CENTRO   | RIO DE JANEIRO |
+|          3 | JARDINS  | SAO PAULO      |
+|          2 | ESTACIO  | RIO DE JANEIRO |
+|          6 | FLAMENGO | RIO DE JANEIRO |
+|          5 | CENTRO   | VITORIA.       |
++------------+----------+----------------+
+
+/* NOME, SEXO, BAIRRO, CIDADE */
+
+SELECT NOME, SEXO, BAIRRO, CIDADE
+FROM CLIENTE, ENDERECO
+WHERE IDCLIENTE = ID_CLIENTE;
+
++--------+------+----------+----------------+
+| NOME   | SEXO | BAIRRO   | CIDADE         |
++--------+------+----------+----------------+
+| JOAO   | M    | CENTRO   | RIO DE JANEIRO |
+| CARLOS | M    | ESTACIO  | RIO DE JANEIRO |
+| ANA    | F    | JARDINS  | SAO PAULO      |
+| CARLA  | F    | CENTRO   | B. HORIZONTE   |
+| JORGE  | M    | CENTRO   | VITORIA.       |
+| CELIA  | F    | FLAMENGO | RIO DE JANEIRO |
++--------+------+----------+----------------+
+
+/* WHERE = SELEÇÃO */
+
+
+SELECT NOME, SEXO, BAIRRO, CIDADE
+FROM CLIENTE, ENDERECO
+WHERE IDCLIENTE = ID_CLIENTE
+AND SEXO = 'F';
+
++-------+------+----------+----------------+
+| NOME  | SEXO | BAIRRO   | CIDADE         |
++-------+------+----------+----------------+
+| ANA   | F    | JARDINS  | SAO PAULO      |
+| CARLA | F    | CENTRO   | B. HORIZONTE   |
+| CELIA | F    | FLAMENGO | RIO DE JANEIRO |
++-------+------+----------+----------------+
+
+/* WHE IDCLIENTE = ID_CLIENTE
+AND SEXO = 'F'; --> TABELA VERDADE */
+
+SELECT  NOME, SEXO, BAIRRO, CIDADE
+FROM CLIENTE
+INNER JOIN ENDERECO
+ON IDCLIENTE = ID_CLIENTE;
+
++--------+------+----------+----------------+
+| NOME   | SEXO | BAIRRO   | CIDADE         |
++--------+------+----------+----------------+
+| JOAO   | M    | CENTRO   | RIO DE JANEIRO |
+| CARLOS | M    | ESTACIO  | RIO DE JANEIRO |
+| ANA    | F    | JARDINS  | SAO PAULO      |
+| CARLA  | F    | CENTRO   | B. HORIZONTE   |
+| JORGE  | M    | CENTRO   | VITORIA.       |
+| CELIA  | F    | FLAMENGO | RIO DE JANEIRO |
++--------+------+----------+----------------+
+
+SELECT  NOME, SEXO, BAIRRO, CIDADE
+FROM CLIENTE
+	INNER JOIN ENDERECO
+	ON IDCLIENTE = ID_CLIENTE
+WHERE SEXO = 'F';
+
++-------+------+----------+----------------+
+| NOME  | SEXO | BAIRRO   | CIDADE         |
++-------+------+----------+----------------+
+| ANA   | F    | JARDINS  | SAO PAULO      |
+| CARLA | F    | CENTRO   | B. HORIZONTE   |
+| CELIA | F    | FLAMENGO | RIO DE JANEIRO |
++-------+------+----------+----------------+
+
+/*NOME, SEXO, EMAIL, TIPO, NUMERO */
+
+SELECT NOME, SEXO, EMAIL, TIPO, NUMERO
+FROM CLIENTE
+	INNER JOIN TELEFONE
+	ON IDCLIENTE = ID_CLIENTE;
+
++--------+------+----------------+------+----------+
+| NOME   | SEXO | EMAIL          | TIPO | NUMERO   |
++--------+------+----------------+------+----------+
+| JORGE  | M    | JORGE@IG.COM   | CEL  | 78458743 |
+| JORGE  | M    | JORGE@IG.COM   | RES  | 57576876 |
+| JOAO   | M    | JOAO@IG.COM    | CEL  | 54871445 |
+| CARLOS | M    | CARLOSO@IG.COM | COM  | 54987921 |
+| JOAO   | M    | JOAO@IG.COM    | RES  | 89754654 |
+| ANA    | F    | ANA@IG.COM     | CEL  | 21354987 |
+| ANA    | F    | ANA@IG.COM     | CEL  | 89764654 |
+| JOAO   | M    | JOAO@IG.COM    | COM  | 66887845 |
+| JORGE  | M    | JORGE@IG.COM   | RES  | 15478454 |
+| CARLOS | M    | CARLOSO@IG.COM | CEL  | 79977455 |
++--------+------+----------------+------+----------+	
+
+/* NOME, SEXO, BAIRRO, CIDADE, TIPO, NUMERO */
+-- PRECISAR PONTERAR NOME DA TABELA + COLUNA CLIENTE.NOME
+
+SELECT CLIENTE.NOME, CLIENTE.SEXO, ENDERECO.BAIRRO, ENDERECO.CIDADE, TELEFONE.TIPO, TELEFONE.NUMERO
+FROM CLIENTE
+INNER JOIN ENDERECO
+ON CLIENTE.IDCLIENTE = ENDERECO.ID_CLIENTE
+INNER JOIN TELEFONE
+ON CLIENTE.IDCLIENTE = TELEFONE.ID_CLIENTE;
+
++--------+------+---------+----------------+------+----------+
+| NOME   | SEXO | BAIRRO  | CIDADE         | TIPO | NUMERO   |
++--------+------+---------+----------------+------+----------+
+| JORGE  | M    | CENTRO  | VITORIA.       | CEL  | 78458743 |
+| JORGE  | M    | CENTRO  | VITORIA.       | RES  | 57576876 |
+| JOAO   | M    | CENTRO  | RIO DE JANEIRO | CEL  | 54871445 |
+| CARLOS | M    | ESTACIO | RIO DE JANEIRO | COM  | 54987921 |
+| JOAO   | M    | CENTRO  | RIO DE JANEIRO | RES  | 89754654 |
+| ANA    | F    | JARDINS | SAO PAULO      | CEL  | 21354987 |
+| ANA    | F    | JARDINS | SAO PAULO      | CEL  | 89764654 |
+| JOAO   | M    | CENTRO  | RIO DE JANEIRO | COM  | 66887845 |
+| JORGE  | M    | CENTRO  | VITORIA.       | RES  | 15478454 |
+| CARLOS | M    | ESTACIO | RIO DE JANEIRO | CEL  | 79977455 |
++--------+------+---------+----------------+------+----------+
+
+
+-- ABREVIANDO O PONTEIRAMENTO
+
+SELECT C.NOME, C.SEXO, E.BAIRRO, E.CIDADE, T.TIPO, T.NUMERO
+FROM CLIENTE C
+INNER JOIN ENDERECO E
+ON IDCLIENTE = E.ID_CLIENTE
+INNER JOIN TELEFONE T
+ON IDCLIENTE = T.ID_CLIENTE;
+
++--------+------+---------+----------------+------+----------+
+| NOME   | SEXO | BAIRRO  | CIDADE         | TIPO | NUMERO   |
++--------+------+---------+----------------+------+----------+
+| JORGE  | M    | CENTRO  | VITORIA.       | CEL  | 78458743 |
+| JORGE  | M    | CENTRO  | VITORIA.       | RES  | 57576876 |
+| JOAO   | M    | CENTRO  | RIO DE JANEIRO | CEL  | 54871445 |
+| CARLOS | M    | ESTACIO | RIO DE JANEIRO | COM  | 54987921 |
+| JOAO   | M    | CENTRO  | RIO DE JANEIRO | RES  | 89754654 |
+| ANA    | F    | JARDINS | SAO PAULO      | CEL  | 21354987 |
+| ANA    | F    | JARDINS | SAO PAULO      | CEL  | 89764654 |
+| JOAO   | M    | CENTRO  | RIO DE JANEIRO | COM  | 66887845 |
+| JORGE  | M    | CENTRO  | VITORIA.       | RES  | 15478454 |
+| CARLOS | M    | ESTACIO | RIO DE JANEIRO | CEL  | 79977455 |
++--------+------+---------+----------------+------+----------+
+
