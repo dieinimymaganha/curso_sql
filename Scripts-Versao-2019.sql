@@ -3012,6 +3012,8 @@ REFERENCES PESSOA(COLUNA1);
 
 
 /* VERIFICAR AS CHAVES */
+
+SHOW CREATE TABLE TIME;
 +-----------+-------------+------+-----+---------+----------------+
 | Field     | Type        | Null | Key | Default | Extra          |
 +-----------+-------------+------+-----+---------+----------------+
@@ -3019,3 +3021,98 @@ REFERENCES PESSOA(COLUNA1);
 | TIME      | varchar(30) | YES  |     | NULL    |                |
 | ID_PESSOA | varchar(30) | YES  | MUL | NULL    |                |
 +-----------+-------------+------+-----+---------+----------------+
+
+
+/*AULA 40 - Organizando as chaves e introdução às bases de dicinário */
+
+CREATE TABLE JOGADOR(
+	IDJOGADOR INT PRIMARY KEY AUTO_INCREMENT,
+	NOME VARCHAR(30)
+);
+
+CREATE TABLE TIMES(
+	IDTIME INT PRIMARY KEY AUTO_INCREMENT,
+	NOMETIME VARCHAR(30),
+	ID_JOGADOR INT,
+	FOREIGN KEY (ID_JOGADOR)
+	REFERENCES JOGADOR(IDJOGADOR)
+);
+
+INSERT INTO JOGADOR VALUES(NULL,'GUERREO');
+INSERT INTO TIMES VALUES(NULL,'FLAMENTO',1);
+
+SHOW CREATE TABLE JOGADOR;
+SHOW CREATE TABLE TIMES;
+
+DROP TABLE ENDERECO;
+DROP TABLE TELEFONE;
+DROP TABLE CLIENTE;
+
+
+-- CRIANDO A TABELA PRIMEIRO 
+CREATE TABLE CLIENTE(
+	IDCLIENTE INT,
+	NOME VARCHAR(30)
+);
+
+CREATE TABLE TELEFONE(
+	IDETELEFONE INT,
+	TIPO CHAR(3) NOT NULL,
+	NUMERO VARCHAR(10) NOT NULL,
+	ID_CLIENTE INT
+);
+
+-- DEPOIS DEFININDO AS CONSTRAINT 
+
+ALTER TABLE CLIENTE ADD CONSTRAINT PK_CLIENTE
+PRIMARY KEY(IDCLIENTE);
+
+ALTER TABLE TELEFONE ADD CONSTRAINT FK_CLIENTE_TELEFONE
+FOREIGN KEY (ID_CLIENTE) REFERENCES CLIENTE(IDCLIENTE);
+
+/* DICIONARIO DE DADOS */
+
+SHOW DATABASES;
+
+USE INFORMATION_SCHEMA;
+
+SHOW TABLES;
+
+DESC TABLE_CONSTRAINTS;
+
+SELECT CONSTRAINT_SCHEMA AS "BANCO",
+	TABLE_NAME AS "TABELA",
+	CONSTRAINT_NAME AS "NOME DA REGRA",
+	CONSTRAINT_TYPE AS "TIPO"
+	FROM TABLE_CONSTRAINTS
+	WHERE CONSTRAINT_SCHEMA = 'COMERCIO';
+
++----------+------------+---------------------+-------------+
+| BANCO    | TABELA     | NOME DA REGRA       | TIPO        |
++----------+------------+---------------------+-------------+
+| comercio | cliente    | PRIMARY             | PRIMARY KEY |
+| comercio | cursos     | PRIMARY             | PRIMARY KEY |
+| comercio | jogador    | PRIMARY             | PRIMARY KEY |
+| comercio | pessoa     | PRIMARY             | PRIMARY KEY |
+| comercio | pessoa     | COLUNA4             | UNIQUE      |
+| comercio | produto    | PRIMARY             | PRIMARY KEY |
+| comercio | telefone   | FK_CLIENTE_TELEFONE | FOREIGN KEY | -- NOME DO DICIONARIO FACILITA A VISUALIZAÇÃO
+| comercio | time       | PRIMARY             | PRIMARY KEY |
+| comercio | time       | time_ibfk_1         | FOREIGN KEY |
+| comercio | times      | PRIMARY             | PRIMARY KEY |
+| comercio | times      | times_ibfk_1        | FOREIGN KEY |
+| comercio | vendedores | PRIMARY             | PRIMARY KEY |
++----------+------------+---------------------+-------------+
+
+
+/* APAGANDO CONSTRAINTS */
+
+USE COMERCIO;
+
+ALTER TABLE TELEFONE 
+DROP FOREIGN KEY FK_CLIENTE_TELEFONE;
+
+/* CRIANDO NOVAMENTE */
+
+ALTER TABLE TELEFONE ADD CONSTRAINT FK_CLIENTE_TELEFONE
+FOREIGN KEY (ID_CLIENTE) REFERENCES CLIENTE(IDCLIENTE);
