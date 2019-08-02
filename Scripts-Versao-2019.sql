@@ -2769,3 +2769,82 @@ SELECT SUM(JANEIRO) AS TOTAL_JAN,
 SUM(FEVEREIRO) AS TOTAL_FEV,
 SUM(MARCO) AS TOTAL_MAR
 FROM VENDEDORES;
+
+/* VENDAS POR SEXO */
+
+SELECT SEXO, SUM(MARCO) AS TOTAL_MARCO
+FROM VENDEDORES
+GROUP BY SEXO;
+
+
+/* AULA 37 - SUBQUERIES  */
+
+SELECT NOME, MIN(MARCO) AS MIN_MARCO
+FROM VENDEDORES;
+
++--------+-----------+
+| NOME   | MIN_MARCO |
++--------+-----------+
+| CARLOS |    256.90 |
++--------+-----------+
+
+SELECT * FROM VENDEDORES;
+
++------------+----------+------+-----------+-----------+-----------+
+| IDVENDEDOR | NOME     | SEXO | JANEIRO   | FEVEREIRO | MARCO     |
++------------+----------+------+-----------+-----------+-----------+
+|          1 | CARLOS   | M    |  76234.78 | 564564.88 |    256.90 | ****
+|          2 | MARIA    | F    |   5865.78 |  45623.87 |   3225.90 |
+|          3 | ANTONIO  | M    |  78769.78 | 123456.87 |   9898.90 |
+|          4 | CARLA    | F    |   5587.78 |  23478.87 | 556633.88 |
+|          5 | ANDERSON | M    |   2658.78 | 983565.88 |  22254.90 |
+|          6 | IVONE    | F    |  32658.78 | 256688.88 |   3355.90 |
+|          7 | JOAO     | M    |  12447.78 |  23265.87 |  96588.90 |
+|          8 | CELIA    | F    | 265767.78 | 989666.88 |  32655.90 |
++------------+----------+------+-----------+-----------+-----------+
+
+SELECT MIN(MARCO) FROM VENDEDORES;
++------------+
+| MIN(MARCO) |
++------------+
+|     256.90 |
++------------+
+
+SELECT NOME, MARCO FROM VENDEDORES
+WHERE MARCO = (SELECT MIN(MARCO) FROM VENDEDORES);
+
++--------+--------+
+| NOME   | MARCO  |
++--------+--------+
+| CARLOS | 256.90 |
++--------+--------+
+
+SELECT NOME, MARCO FROM VENDEDORES
+WHERE MARCO = (SELECT MAX(MARCO) FROM VENDEDORES);
+
++-------+-----------+
+| NOME  | MARCO     |
++-------+-----------+
+| CARLA | 556633.88 |
++-------+-----------+
+
+SELECT NOME, FEVEREIRO FROM VENDEDORES
+WHERE FEVEREIRO > (SELECT AVG(FEVEREIRO) FROM VENDEDORES);
+
++----------+-----------+
+| NOME     | FEVEREIRO |
++----------+-----------+
+| CARLOS   | 564564.88 |
+| ANDERSON | 983565.88 |
+| CELIA    | 989666.88 |
++----------+-----------+
+
+SELECT NOME, MARCO FROM VENDEDORES
+WHERE MARCO > (SELECT AVG(MARCO) FROM VENDEDORES);
+
++-------+-----------+
+| NOME  | MARCO     |
++-------+-----------+
+| CARLA | 556633.88 |
+| JOAO  |  96588.90 |
++-------+-----------+
