@@ -2594,3 +2594,93 @@ ON C.IDCLIENTE = E.ID_CLIENTE
 INNER JOIN TELEFONE T
 ON C.IDCLIENTE = T.ID_CLIENTE
 WHERE SEXO = 'F' AND TIPO = 'CEL' AND ESTADO = 'SP'; 
+
+/* IFNULL */
+
+/* NOME, EMAIL, NUMERO, ESTADO */
+
+SELECT C.NOME, C.EMAIL, E.ESTADO, T.NUMERO
+FROM CLIENTE C 
+INNER JOIN ENDERECO E 
+ON C.IDCLIENTE = E.ID_CLIENTE
+INNER JOIN TELEFONE T
+ON C.IDCLIENTE = T.ID_CLIENTE;
+
++----------+--------------------+--------+----------+
+| NOME     | EMAIL              | ESTADO | NUMERO   |
++----------+--------------------+--------+----------+
+| JORGE    | JORGE@IG.COM       | ES     | 78458743 |
+| JORGE    | JORGE@IG.COM       | ES     | 57576876 |
+| JOAO     | JOAO@IG.COM        | RJ     | 54871445 |
+| CARLOS   | CARLOSO@IG.COM     | RJ     | 54987921 |
+| JOAO     | JOAO@IG.COM        | RJ     | 89754654 |
+| ANA      | ANA@IG.COM         | SP     | 21354987 |
+| ANA      | ANA@IG.COM         | SP     | 89764654 |
+| JOAO     | JOAO@IG.COM        | RJ     | 66887845 |
+| JORGE    | JORGE@IG.COM       | ES     | 15478454 |
+| CARLOS   | CARLOSO@IG.COM     | RJ     | 79977455 |
+| KARLA    | KARLA@GMAIL.COM    | MG     | 68976565 |
+| KARLA    | KARLA@GMAIL.COM    | MG     | 99656675 |
+| LORENA   | NULL               | RJ     | 33567765 |
+| LORENA   | NULL               | RJ     | 88688786 |
+| EDUARDO  | NULL               | RJ     | 88687979 |
+| ANTONIO  | ANTONIO@IG.COM     | ES     | 88965676 |
+| ELAINE   | ELAINE@GLOBO.COM   | PR     | 89966809 |
+| CARMEM   | CARMEM@IG.COM      | SP     | 88679978 |
+| ADRIANA  | ADRIANA@GMAIL.COM  | PR     | 88679978 |
+| JOICE    | JOICE@GMAIL.COM    | SP     | 89955665 |
+| DIEINIMY | DIEINIMY@GMAIL.COM | PR     | 77455786 |
+| EVELISE  | EVELISE@GMAIL.COM  | PR     | 77755785 |
+| EVELISE  | EVELISE@GMAIL.COM  | PR     | 44522578 |
+| SERGIO   | SERGIO@GMAIL.COM   | PR     | 44522578 |
++----------+--------------------+--------+----------+
+
+
+SELECT C.NOME,
+IFNULL(C.EMAIL,'NAO TEM EMAIL'),
+E.ESTADO,
+T.NUMERO
+FROM CLIENTE C 
+INNER JOIN ENDERECO E 
+ON C.IDCLIENTE = E.ID_CLIENTE
+INNER JOIN TELEFONE T
+ON C.IDCLIENTE = T.ID_CLIENTE;
+
+SELECT C.NOME,
+IFNULL(C.EMAIL,'*************************') AS EMAIL,
+E.ESTADO,
+T.NUMERO
+FROM CLIENTE C 
+INNER JOIN ENDERECO E 
+ON C.IDCLIENTE = E.ID_CLIENTE
+INNER JOIN TELEFONE T
+ON C.IDCLIENTE = T.ID_CLIENTE;
+
++----------+---------------------------+--------+----------+
+| NOME     | EMAIL                     | ESTADO | NUMERO   |
++----------+---------------------------+--------+----------+
+| JORGE    | JORGE@IG.COM              | ES     | 78458743 |
+| JORGE    | JORGE@IG.COM              | ES     | 57576876 |
+| JOAO     | JOAO@IG.COM               | RJ     | 54871445 |
+| CARLOS   | CARLOSO@IG.COM            | RJ     | 54987921 |
+| JOAO     | JOAO@IG.COM               | RJ     | 89754654 |
+| ANA      | ANA@IG.COM                | SP     | 21354987 |
+| ANA      | ANA@IG.COM                | SP     | 89764654 |
+| JOAO     | JOAO@IG.COM               | RJ     | 66887845 |
+| JORGE    | JORGE@IG.COM              | ES     | 15478454 |
+| CARLOS   | CARLOSO@IG.COM            | RJ     | 79977455 |
+| KARLA    | KARLA@GMAIL.COM           | MG     | 68976565 |
+| KARLA    | KARLA@GMAIL.COM           | MG     | 99656675 |
+| LORENA   | ************************* | RJ     | 33567765 |
+| LORENA   | ************************* | RJ     | 88688786 |
+| EDUARDO  | ************************* | RJ     | 88687979 |
+| ANTONIO  | ANTONIO@IG.COM            | ES     | 88965676 |
+| ELAINE   | ELAINE@GLOBO.COM          | PR     | 89966809 |
+| CARMEM   | CARMEM@IG.COM             | SP     | 88679978 |
+| ADRIANA  | ADRIANA@GMAIL.COM         | PR     | 88679978 |
+| JOICE    | JOICE@GMAIL.COM           | SP     | 89955665 |
+| DIEINIMY | DIEINIMY@GMAIL.COM        | PR     | 77455786 |
+| EVELISE  | EVELISE@GMAIL.COM         | PR     | 77755785 |
+| EVELISE  | EVELISE@GMAIL.COM         | PR     | 44522578 |
+| SERGIO   | SERGIO@GMAIL.COM          | PR     | 44522578 |
++----------+---------------------------+--------+----------+
