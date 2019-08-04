@@ -3118,7 +3118,7 @@ ALTER TABLE TELEFONE ADD CONSTRAINT FK_CLIENTE_TELEFONE
 FOREIGN KEY (ID_CLIENTE) REFERENCES CLIENTE(IDCLIENTE);
 
 
-/*AULA 40 - Trigger na pratica */
+/*AULA 47 - Trigger na pratica */
 
 CREATE DATABASE AULA40;
 
@@ -3161,3 +3161,164 @@ INSERT INTO USUARIO VALUES(NULL,'ANDRADE', 'ANDRADE2009','HEXACAMPEAO');
 
 
 DELETE FROM USUARIO WHERE IDUSUARIO = 1;
+
+/* AULA 48  - Triggers para banco de backups */
+
+-- TABELA ORIGINAL
+CREATE DATABASE LOJA;
+
+CREATE TABLE PRODUTO(
+	IDPRODUTO INT PRIMARY KEY AUTO_INCREMENT,
+	NOME VARCHAR(30),
+	VALOR FLOAT(10,2)
+);
+
+
+-- TABELA DE BACKUP
+
+CREATE DATABASE BACKUP;
+
+USE BACKUP;
+
+CREATE TABLE BKP_PRODUTO(
+	IDBKP INT PRIMARY KEY AUTO_INCREMENT,
+	IDPRODUTO INT,
+	NOME VARCHAR(30),
+	VALOR FLOAT(10,2)
+);
+
+
+USE LOJA;
+
+-- TESTANDO CONEXÃO ENTRE OS 2 BANCOS
+
+INSERT INTO BACKUP.BKP_PRODUTO VALUES(NULL,1000,'TESTE',0.0);
+
+-- CONFERINDO SE INSERIU
+
+/* USANDO A SINTAXE NOMEDOBANCO.NOMEDATABELA É POSSIVEL FAZER SCRIPTS DE UM BANCO PARA O OUTRO */
+
+SELECT * FROM BACKUP.BKP_PRODUTO;
+
+
+-- CRIANDO A TRIGGER
+-- TRIGGER PARA INSERÇÃO
+
+DELIMITER $
+
+CREATE TRIGGER BACKUP_PRODUTO
+BEFORE INSERT ON PRODUTO
+FOR EACH ROW 
+BEGIN
+	INSERT INTO BACKUP.BKP_PRODUTO VALUES(
+		NULL,NEW.IDPRODUTO,NEW.NOME,NEW.VALOR);
+END
+$
+
+
+DELIMITER ;
+
+INSERT INTO PRODUTO VALUES(NULL,'LIVRO MODELAGEM', 50.00);
+INSERT INTO PRODUTO VALUES(NULL,'LIVRO B', 80.00);
+INSERT INTO PRODUTO VALUES(NULL,'LIVRO ORACLE', 70.00);
+INSERT INTO PRODUTO VALUES(NULL,'LIVRO SQL SERVER', 100.00);
+
+
+SELECT * FROM PRODUTO;
++-----------+------------------+--------+
+| IDPRODUTO | NOME             | VALOR  |
++-----------+------------------+--------+
+|         1 | LIVRO MODELAGEM  |  50.00 |
+|         2 | LIVRO B          |  80.00 |
+|         3 | LIVRO ORACLE     |  70.00 |
+|         4 | LIVRO SQL SERVER | 100.00 |
++-----------+------------------+--------+
+
+SELECT * FROM BACKUP.BKP_PRODUTO;
+
++-------+-----------+------------------+--------+
+| IDBKP | IDPRODUTO | NOME             | VALOR  |
++-------+-----------+------------------+--------+
+|     1 |      1000 | TESTE            |   0.00 |-- O ID VEM ZERADO POIS
+|     2 |         0 | LIVRO MODELAGEM  |  50.00 |-- O ID AINDA NÃO FOI CRIADO POIS CRIAMOS 
+|     3 |         0 | LIVRO B          |  80.00 |-- A TRIGGER USANDO BEFORE PARA INSERIR ANTES DA INSERÇÃO NO BANCO
+|     4 |         0 | LIVRO ORACLE     |  70.00 |-- O CORRETO É USAR O AFTER
+|     5 |         0 | LIVRO SQL SERVER | 100.00 |
++-------+-----------+------------------+--------+
+
+
+-- TRIGGER DE DELEÇÃO
+
+DELIMITER $
+
+CREATE TRIGGER BACKUP_PRODUTO_DEL
+BEFORE DELETE ON PRODUTO
+FOR EACH ROW 
+BEGIN
+	INSERT INTO BACKUP.BKP_PRODUTO VALUES(
+		NULL,OLD.IDPRODUTO,OLD.NOME,OLD.VALOR);
+END
+$
+
+
+DELIMITER ;
+
+DELETE FROM PRODUTO WHERE IDPRODUTO = 2;
+
+
+SELECT * FROM BACKUP.BKP_PRODUTO;
++-------+-----------+------------------+--------+
+| IDBKP | IDPRODUTO | NOME             | VALOR  |
++-------+-----------+------------------+--------+
+|     1 |      1000 | TESTE            |   0.00 |
+|     2 |         0 | LIVRO MODELAGEM  |  50.00 |
+|     3 |         0 | LIVRO B          |  80.00 |
+|     4 |         0 | LIVRO ORACLE     |  70.00 |
+|     5 |         0 | LIVRO SQL SERVER | 100.00 |
+|     6 |         2 | LIVRO B          |  80.00 |
++-------+-----------+------------------+--------+
+
+/*ARRUMANDO A TRIGGER DE INSERÇÃO PARA AFTER */
+
+DROP TRIGGER BACKUP_PRODUTO;
+
+DELIMITER $
+
+CREATE TRIGGER BACKUP_PRODUTO
+AFTER INSERT ON PRODUTO
+FOR EACH ROW 
+BEGIN
+	INSERT INTO BACKUP.BKP_PRODUTO VALUES(
+		NULL,NEW.IDPRODUTO,NEW.NOME,NEW.VALOR);
+END
+$
+
+
+DELIMITER ;
+
+INSERT INTO PRODUTO VALUES(NULL,'LIVRO C#', 100.00);
+
+SELECT * FROM PRODUTO;
+
++-----------+------------------+--------+
+| IDPRODUTO | NOME             | VALOR  |
++-----------+------------------+--------+
+|         1 | LIVRO MODELAGEM  |  50.00 |
+|         3 | LIVRO ORACLE     |  70.00 |
+|         4 | LIVRO SQL SERVER | 100.00 |
+|         5 | LIVRO C#         | 100.00 |
++-----------+------------------+--------+
+
+SELECT * FROM BACKUP.BKP_PRODUTO;
+
++-------+-----------+------------------+--------+
+| IDBKP | IDPRODUTO | NOME             | VALOR  |
++-------+-----------+------------------+--------+
+|     1 |      1000 | TESTE            |   0.00 |
+|     2 |         0 | LIVRO MODELAGEM  |  50.00 |
+|     3 |         0 | LIVRO B          |  80.00 |
+|     4 |         0 | LIVRO ORACLE     |  70.00 |
+|     5 |         0 | LIVRO SQL SERVER | 100.00 |
+|     6 |         2 | LIVRO B          |  80.00 |
+|     7 |         5 | LIVRO C#         | 100.00 | -- AGORA O ID ESTÁ CORRETO
++-------+-----------+------------------+--------+
