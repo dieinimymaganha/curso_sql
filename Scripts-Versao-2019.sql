@@ -3569,3 +3569,19 @@ FROM CURSOS;
 
 /* EXERCICIO NOME, VALOR, HORAS E O NOME DO PRE REQUISITO DO CURSO */
 
+
+
+SELECT C.NOME AS CURSO, C.VALOR AS VALOR, C.HORAS AS CARGA, IFNULL(P.NOME,'---') AS PREREQ
+FROM CURSOS C
+LEFT JOIN CURSOS P 
+ON P.IDCURSO = C.ID_PREREQ;
+
++------------------------+--------+-------+------------------------+
+| CURSO                  | VALOR  | CARGA | PREREQ                 |
++------------------------+--------+-------+------------------------+
+| BD RELACIONAL          | 400.00 |    20 | ---                    |
+| BUSISNESS INTELLIGENCE | 800.00 |    40 | BD RELACIONAL          |
+| RELATORIOS AVANCADOS   | 600.00 |    20 | BUSISNESS INTELLIGENCE |
+| LOGICA PROGRAMACAO     | 400.00 |    20 | ---                    |
+| RUBY                   | 500.00 |    30 | LOGICA PROGRAMACAO     |
++------------------------+--------+-------+------------------------+
