@@ -3504,3 +3504,68 @@ SELECT * FROM BACKUP.BKP_PRODUTO;
 +----------+-----------+------------------+----------------+----------------+---------------------+----------------+--------+
 |        1 |         4 | LIVRO SQL SERVER |         100.00 |         110.00 | 2019-08-04 12:05:52 | root@localhost | U      |
 +----------+-----------+------------------+----------------+----------------+---------------------+----------------+--------+
+
+/* AULA 50 - MAIS SOBRE MODELAGE */ 
+
+-- CRIADA MODELAGEMAULA51 BRMODELO
+
+-- AUTORELACIONAMENTO
+
+CREATE TABLE CURSOS(
+	IDCURSO INT PRIMARY KEY AUTO_INCREMENT,
+	NOME VARCHAR(30),
+	HORAS INT,
+	VALOR FLOAT(10,2),
+	ID_PREREQ INT
+);
+
+DESC CURSOS;
++-----------+-------------+------+-----+---------+----------------+
+| Field     | Type        | Null | Key | Default | Extra          |
++-----------+-------------+------+-----+---------+----------------+
+| IDCURSO   | int(11)     | NO   | PRI | NULL    | auto_increment |
+| NOME      | varchar(30) | YES  |     | NULL    |                |
+| HORAS     | int(11)     | YES  |     | NULL    |                |
+| VALOR     | float(10,2) | YES  |     | NULL    |                |
+| ID_PREREQ | int(11)     | YES  |     | NULL    |                |
++-----------+-------------+------+-----+---------+----------------+
+
+ALTER TABLE CURSOS ADD CONSTRAINT FK_PREREQ
+FOREIGN KEY(ID_PREREQ) REFERENCES CURSOS(IDCURSO);
+
+DESC CURSOS;
+
++-----------+-------------+------+-----+---------+----------------+
+| Field     | Type        | Null | Key | Default | Extra          |
++-----------+-------------+------+-----+---------+----------------+
+| IDCURSO   | int(11)     | NO   | PRI | NULL    | auto_increment |
+| NOME      | varchar(30) | YES  |     | NULL    |                |
+| HORAS     | int(11)     | YES  |     | NULL    |                |
+| VALOR     | float(10,2) | YES  |     | NULL    |                |
+| ID_PREREQ | int(11)     | YES  | MUL | NULL    |                |
++-----------+-------------+------+-----+---------+----------------+
+
+INSERT INTO CURSOS VALUES(NULL, 'BD RELACIONAL', 20, 400.00, NULL);
+INSERT INTO CURSOS VALUES(NULL, 'BUSISNESS INTELLIGENCE', 40, 800.00, 1);
+INSERT INTO CURSOS VALUES(NULL, 'RELATORIOS AVANCADOS', 20, 600.00, 2);
+INSERT INTO CURSOS VALUES(NULL, 'LOGICA PROGRAMACAO', 20, 400.00, NULL);
+INSERT INTO CURSOS VALUES(NULL, 'RUBY', 30, 500.00, 4);
+
+SELECT * FROM CURSOS;
+
+SELECT NOME, VALOR, HORAS, IFNULL(ID_PREREQ,'SEM REQ') REQUISITO
+FROM CURSOS;
+
++------------------------+--------+-------+-----------+
+| NOME                   | VALOR  | HORAS | REQUISITO |
++------------------------+--------+-------+-----------+
+| BD RELACIONAL          | 400.00 |    20 | SEM REQ   |
+| BUSISNESS INTELLIGENCE | 800.00 |    40 | 1         |
+| RELATORIOS AVANCADOS   | 600.00 |    20 | 2         |
+| LOGICA PROGRAMACAO     | 400.00 |    20 | SEM REQ   |
+| RUBY                   | 500.00 |    30 | 4         |
++------------------------+--------+-------+-----------+
+
+
+/* EXERCICIO NOME, VALOR, HORAS E O NOME DO PRE REQUISITO DO CURSO */
+
