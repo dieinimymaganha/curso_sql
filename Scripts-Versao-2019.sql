@@ -3421,3 +3421,86 @@ SELECT * FROM BACKUP.BKP_PRODUTO;
 |     8 |         4 | LIVRO SQL SERVER | 100.00 | D      |
 |     9 |         6 | LIVRO PYTHON     | 150.00 | I      |
 +-------+-----------+------------------+--------+--------+
+
+
+/* AULA 50 - Quem mexeu no meu dados? Auditando uma tabela com trigger */
+
+DROP DATABASE LOJA;
+
+DROP DATABASE BACKUP;
+
+CREATE DATABASE LOJA;
+
+USE LOJA;
+
+CREATE TABLE PRODUTO(
+	IDPRODUTO INT PRIMARY KEY AUTO_INCREMENT,
+	NOME VARCHAR(30),
+	VALOR FLOAT(10,2)
+);
+
+INSERT INTO PRODUTO VALUES(NULL,'LIVRO MODELAGEM', 50.00);
+INSERT INTO PRODUTO VALUES(NULL,'LIVRO B', 80.00);
+INSERT INTO PRODUTO VALUES(NULL,'LIVRO ORACLE', 70.00);
+INSERT INTO PRODUTO VALUES(NULL,'LIVRO SQL SERVER', 100.00);
+
+/* QUANDO */
+
+SELECT NOW();
+
+/* QUEM */
+
+SELECT CURRENT_USER();
+
+
+CREATE DATABASE BACKUP;
+
+USE BACKUP;
+
+CREATE TABLE BKP_PRODUTO(
+	IDBACKUP INT PRIMARY KEY AUTO_INCREMENT,
+	IDPRODUTO INT,
+	NOME VARCHAR(30),
+	VALOR_ORIGINAL FLOAT(10,2),
+	VALOR_ALTERADO FLOAT(10,2),
+	DATA DATETIME,
+	USUARIO VARCHAR(30),
+	EVENTO CHAR(1)
+);
+
+USE LOJA;
+
+DELIMITER $
+
+CREATE TRIGGER AUDIT_PROD
+AFTER UPDATE ON PRODUTO
+FOR EACH ROW
+BEGIN
+	INSERT INTO BACKUP.BKP_PRODUTO VALUES (
+		NULL,OLD.IDPRODUTO,OLD.NOME,OLD.VALOR,NEW.VALOR,NOW(),CURRENT_USER(),'U');
+END
+$
+
+DELIMITER ;
+
+UPDATE PRODUTO SET VALOR = 110.00
+WHERE IDPRODUTO = 4;
+
+SELECT * FROM PRODUTO;
+
++-----------+------------------+--------+
+| IDPRODUTO | NOME             | VALOR  |
++-----------+------------------+--------+
+|         1 | LIVRO MODELAGEM  |  50.00 |
+|         2 | LIVRO B          |  80.00 |
+|         3 | LIVRO ORACLE     |  70.00 |
+|         4 | LIVRO SQL SERVER | 110.00 | -- ALTERADO DE 100 PARA 110
++-----------+------------------+--------+
+
+SELECT * FROM BACKUP.BKP_PRODUTO;
+
++----------+-----------+------------------+----------------+----------------+---------------------+----------------+--------+
+| IDBACKUP | IDPRODUTO | NOME             | VALOR_ORIGINAL | VALOR_ALTERADO | DATA                | USUARIO        | EVENTO |
++----------+-----------+------------------+----------------+----------------+---------------------+----------------+--------+
+|        1 |         4 | LIVRO SQL SERVER |         100.00 |         110.00 | 2019-08-04 12:05:52 | root@localhost | U      |
++----------+-----------+------------------+----------------+----------------+---------------------+----------------+--------+
