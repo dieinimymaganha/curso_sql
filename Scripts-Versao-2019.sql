@@ -3322,3 +3322,102 @@ SELECT * FROM BACKUP.BKP_PRODUTO;
 |     6 |         2 | LIVRO B          |  80.00 |
 |     7 |         5 | LIVRO C#         | 100.00 | -- AGORA O ID ESTÁ CORRETO
 +-------+-----------+------------------+--------+
+
+/* AULA 49 - After, Before, Insert, Delete ou Update?  Os eventos de uma trigger */
+
+ALTER TABLE BACKUP.BKP_PRODUTO
+ADD EVENTO CHAR(1);
+
+
+
+DROP TRIGGER BACKUP_PRODUTO_DEL;
+
+-- NOVA TRIGGER PARA INCLUIR UM IDENTIFICAÇÃO 
+-- QUE SERIA UMA DELEÇÃO  "D"
+
+DELIMITER $
+
+CREATE TRIGGER BACKUP_PRODUTO_DEL
+BEFORE DELETE ON PRODUTO
+FOR EACH ROW 
+BEGIN
+	INSERT INTO BACKUP.BKP_PRODUTO VALUES(
+		NULL,OLD.IDPRODUTO,OLD.NOME,OLD.VALOR,'D');
+END
+$
+
+DELIMITER ;
+
+
+DELETE FROM PRODUTO WHERE IDPRODUTO = 4;
+
+SELECT * FROM PRODUTO;
+
++-----------+-----------------+--------+
+| IDPRODUTO | NOME            | VALOR  |
++-----------+-----------------+--------+
+|         1 | LIVRO MODELAGEM |  50.00 |
+|         3 | LIVRO ORACLE    |  70.00 |
+|         5 | LIVRO C#        | 100.00 |
++-----------+-----------------+--------+
+
+SELECT * FROM BACKUP.BKP_PRODUTO;
+
++-------+-----------+------------------+--------+--------+
+| IDBKP | IDPRODUTO | NOME             | VALOR  | EVENTO |
++-------+-----------+------------------+--------+--------+
+|     1 |      1000 | TESTE            |   0.00 | NULL   |
+|     2 |         0 | LIVRO MODELAGEM  |  50.00 | NULL   |
+|     3 |         0 | LIVRO B          |  80.00 | NULL   |
+|     4 |         0 | LIVRO ORACLE     |  70.00 | NULL   |
+|     5 |         0 | LIVRO SQL SERVER | 100.00 | NULL   |
+|     6 |         2 | LIVRO B          |  80.00 | NULL   |
+|     7 |         5 | LIVRO C#         | 100.00 | NULL   |
+|     8 |         4 | LIVRO SQL SERVER | 100.00 | D      |
++-------+-----------+------------------+--------+--------+
+
+-- NOVA TRIGGER PARA INCLUIR UM IDENTIFICAÇÃO 
+-- QUE SERIA UMA INSERÇÃO  "I"
+
+DROP TRIGGER BACKUP_PRODUTO;
+
+DELIMITER $
+
+CREATE TRIGGER BACKUP_PRODUTO
+AFTER INSERT ON PRODUTO
+FOR EACH ROW 
+BEGIN
+	INSERT INTO BACKUP.BKP_PRODUTO VALUES(
+		NULL,NEW.IDPRODUTO,NEW.NOME,NEW.VALOR,"I");
+END
+$
+
+DELIMITER ;
+
+INSERT INTO PRODUTO VALUES(NULL,'LIVRO PYTHON', 150.00);
+
+SELECT * FROM PRODUTO;
++-----------+-----------------+--------+
+| IDPRODUTO | NOME            | VALOR  |
++-----------+-----------------+--------+
+|         1 | LIVRO MODELAGEM |  50.00 |
+|         3 | LIVRO ORACLE    |  70.00 |
+|         5 | LIVRO C#        | 100.00 |
+|         6 | LIVRO PYTHON    | 150.00 |
++-----------+-----------------+--------+
+
+SELECT * FROM BACKUP.BKP_PRODUTO;
+
++-------+-----------+------------------+--------+--------+
+| IDBKP | IDPRODUTO | NOME             | VALOR  | EVENTO |
++-------+-----------+------------------+--------+--------+
+|     1 |      1000 | TESTE            |   0.00 | NULL   |
+|     2 |         0 | LIVRO MODELAGEM  |  50.00 | NULL   |
+|     3 |         0 | LIVRO B          |  80.00 | NULL   |
+|     4 |         0 | LIVRO ORACLE     |  70.00 | NULL   |
+|     5 |         0 | LIVRO SQL SERVER | 100.00 | NULL   |
+|     6 |         2 | LIVRO B          |  80.00 | NULL   |
+|     7 |         5 | LIVRO C#         | 100.00 | NULL   |
+|     8 |         4 | LIVRO SQL SERVER | 100.00 | D      |
+|     9 |         6 | LIVRO PYTHON     | 150.00 | I      |
++-------+-----------+------------------+--------+--------+
